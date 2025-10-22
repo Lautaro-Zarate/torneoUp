@@ -1,7 +1,11 @@
-import { loginWithGoogle } from "@/modules/auth/services/loginWithGoogle"
+'use client'
+// import { loginWithGoogle } from "@/modules/auth/services/loginWithGoogle"
 import { useForm } from "react-hook-form"
 import { authSchema } from "@/schema/authSchema";
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Button } from "./Button";
+import { useAuth } from "@/hooks/useAuth";
+
 export const Form = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
@@ -14,6 +18,9 @@ export const Form = () => {
         console.log('Formulario enviado...')
         reset();
     }
+
+    const {signInWithGoogle, loading} = useAuth();
+
     return(
         <section>
             <aside>
@@ -27,8 +34,11 @@ export const Form = () => {
                     <label htmlFor="password">Contraseña</label>
                     <input type="password" id="password" placeholder="Ingrese su contraseña..." {...register('password')}/>
                     {errors && <p>{errors.password?.message}</p>}
-                    <button onClick={loginWithGoogle}>Ingresar con Google</button>
-                    <button>Ingresar</button>
+                    <div>
+                        {loading ?? <p>Cargando...</p>}
+                        <Button label="Ingresar con Google" onClick={signInWithGoogle}/>
+                        <Button label="Ingresar" type="submit"/>
+                    </div>
                 </form>
             </aside>
         </section>
